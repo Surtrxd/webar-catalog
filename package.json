@@ -1,0 +1,17 @@
+{
+  "name": "webar-outfit-catalog",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview --port 10000"
+  },
+  "dependencies": {
+    "three": "^0.155.0",
+    "mindar-image-three": "^1.2.5"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
