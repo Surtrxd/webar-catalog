@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>WebAR каталог одежды</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Стили -->
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo">WebAR Каталог</div>
+      <div class="subtitle">Примерка одежды на виртуальном манекене</div>
+    </header>
+
+    <main class="site-main">
+      <!-- КАТАЛОГ (экран выбора образа) -->
+      <section id="catalog-section" class="catalog-section">
+        <h1>Выберите образ для примерки</h1>
+        <p class="catalog-hint">
+          Сначала выберите одежду, затем откроется камера и манекен появится на маркере.
+        </p>
+
+        <div class="catalog-grid">
+          <article class="card" data-outfit="look1">
+            <div class="card-thumb card-thumb-1"></div>
+            <h2>Образ 1: Жакет</h2>
+            <p>Городской стиль с акцентом на верхнюю одежду.</p>
+            <button class="card-btn" type="button">Примерить этот образ</button>
+          </article>
+
+          <article class="card" data-outfit="look2">
+            <div class="card-thumb card-thumb-2"></div>
+            <h2>Образ 2: Платье</h2>
+            <p>Повседневный женственный образ.</p>
+            <button class="card-btn" type="button">Примерить этот образ</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- AR-СЦЕНА (экран с камерой) -->
+      <section id="ar-section" class="ar-section" hidden>
+        <div class="ar-top-bar">
+          <button id="backToCatalog" type="button">← Назад к каталогу</button>
+          <div id="arStatus" class="ar-status">Наведите камеру на маркер</div>
+        </div>
+
+        <!-- сюда MindAR вставит видео + WebGL -->
+        <div id="container" class="ar-container">
+          <div id="hint" class="hint-overlay">Камера запускается...</div>
+        </div>
+
+        <div class="ar-outfits">
+          <span>Сменить образ:</span>
+          <button type="button" class="ar-outfit-btn" data-outfit="look1">
+            Образ 1
+          </button>
+          <button type="button" class="ar-outfit-btn" data-outfit="look2">
+            Образ 2
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- основной скрипт (собирается бандлером) -->
+    <script type="module" src="./src/ar.js"></script>
+  </body>
+</html>
