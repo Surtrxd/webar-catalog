@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js";
+import * as THREE from "three"
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js";
 
 const { MindARThree } = window.MINDAR.IMAGE; // вот тут берем MindARThree
@@ -11,9 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const hintEl = document.getElementById("hint");
 
   const outfits = {
-    look1: { name: "Образ 1: Жакет", file: "/static/models/jacket.glb" },
-    look2: { name: "Образ 2: Повседневный", file: "/static/models/casual.glb" },
-    look3: { name: "Образ 3: Вечерний", file: "/static/models/evening.glb" },
+    look1: { name: "Образ 1: Жакет", file: "/static/models/cyberpunk_2077_-_vs_jacket.glb" },
+    look2: { name: "Образ 2: Повседневный", file: "/static/models/woman_dress.glb" },
   };
 
   let currentOutfitId = null;
@@ -32,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: "/static/ar/catalog-marker.mind",
+      imageTargetSrc: "/static/catalog/catalog-marker.mind",
     });
 
     const three = mindarThree;
