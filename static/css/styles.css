@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f7f7fb;
+  color: #222;
+}
+
+header {
+  padding: 14px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e6e6ee;
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+main {
+  padding: 20px;
+}
+
+.viewer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+#canvas-wrap {
+  flex: 1 1 60%;
+  min-height: 420px;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#three-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.controls {
+  flex: 1 1 300px;
+  max-width: 360px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #ececf5;
+}
+
+.controls input {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+button {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 0;
+  background: #2f80ed;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:hover {
+  background: #1f5fba;
+}
+
+.preset-buttons button {
+  background: #eee;
+  color: #222;
+}
+
+.preset-buttons button:hover {
+  background: #ddd;
+}
+
+.notes {
+  margin-top: 24px;
+  font-size: 14px;
+}

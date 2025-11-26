@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WebAR Каталог одежды</title>
+
+  <!-- Стили -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <!-- three.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- model-viewer (fallback AR / 3D preview) -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <!-- Если захочешь 8th Wall — раскомментируешь и вставишь ключ -->
+  <!-- <script src="https://apps.8thwall.com/xrweb?appKey=ТВОЙ_APP_KEY"></script> -->
+</head>
+<body>
+  <header>
+    <h1>WebAR — Каталог одежды</h1>
+  </header>
+
+  <main>
+    <section class="viewer-row">
+      <div id="canvas-wrap">
+        <!-- three.js canvas -->
+        <canvas id="three-canvas"></canvas>
+      </div>
+
+      <aside class="controls">
+        <h3>Выбор модели</h3>
+        <p id="status">Статус: ожидание загрузки</p>
+
+        <label for="modelUrl">URL .glb:</label>
+        <input
+          id="modelUrl"
+          type="text"
+          placeholder="static/assets/mannequin.glb"
+          value="static/assets/mannequin.glb"
+        >
+
+        <div class="buttons">
+          <button id="loadBtn">Загрузить модель</button>
+          <button id="arBtn">Открыть AR / Примерить</button>
+        </div>
+
+        <hr>
+
+        <div class="preset-buttons">
+          <p>Быстрый выбор:</p>
+          <button data-model="static/assets/mannequin.glb">Манекен</button>
+          <button data-model="static/assets/jacket.glb">Жакет</button>
+          <button data-model="static/assets/dress.glb">Платье</button>
+        </div>
+
+        <hr>
+
+        <div id="fallback" style="display:none">
+          <p>Fallback: интерактивный 3D-превью</p>
+          <model-viewer
+            id="mv"
+            src=""
+            alt="3D модель"
+            shadow-intensity="1"
+            camera-controls
+            ar
+            autoplay
+            style="width:100%;height:300px"
+          ></model-viewer>
+        </div>
+      </aside>
+    </section>
+
+    <section class="notes">
+      <h4>Как пользоваться</h4>
+      <ol>
+        <li>Положи `.glb` модели в <b>static/assets/</b> (манекен и одежда).</li>
+        <li>Нажми на одну из кнопок «Манекен / Жакет / Платье» или укажи путь вручную.</li>
+        <li>Нажми «Загрузить модель» — модель появится в 3D-сцене.</li>
+        <li>Нажми «Открыть AR» — позже сюда можно подвязать 8th Wall, сейчас работает fallback через model-viewer.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
