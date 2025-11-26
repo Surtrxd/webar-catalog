@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WebAR Каталог одежды</title>
 
-  <!-- твои стили -->
+  <!-- Стили сайта -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
-  <!-- СТИЛИ MindAR (чтобы видео и канвас нормально растягивались) -->
+  <!-- MindAR CSS -->
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.css" />
 
-  <!-- SKRIPT MindAR (НЕ МОДУЛЬ, глобальный объект window.MINDAR) -->
+  <!-- MindAR JS (глобальный объект window.MINDAR) -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
 
-  <!-- наш основной код как ES-модуль -->
+  <!-- Основной скрипт (наш код) -->
   <script type="module" defer src="{{ url_for('static', filename='ar/catalog.js') }}"></script>
-
 </head>
+
 <body>
   <header class="site-header">
     <div class="logo">WebAR Каталог</div>
@@ -27,57 +27,41 @@
 
   <main class="site-main">
 
-    <!-- ШАГ 1: КАТАЛОГ -->
+    <!-- ============================= -->
+    <!-- КАТАЛОГ -->
+    <!-- ============================= -->
     <section id="catalog-section" class="catalog-section">
       <h1>Выберите образ для примерки</h1>
-      <p class="catalog-hint">
-        Сначала выберите одежду, затем она появится на манекене в AR-режиме.
-      </p>
 
       <div class="catalog-grid">
+
         <article class="card" data-outfit="look1">
           <div class="card-thumb card-thumb-1"></div>
-          <h2>Образ 1: Классический жакет</h2>
-          <p>Базовый образ с пиджаком. Подходит для делового стиля.</p>
+          <h2>Образ 1: Жакет</h2>
+          <p>Современный городской стиль с акцентом на верхнюю одежду.</p>
           <button class="card-btn" type="button">Примерить этот образ</button>
         </article>
 
         <article class="card" data-outfit="look2">
           <div class="card-thumb card-thumb-2"></div>
-          <h2>Образ 2: Повседневный</h2>
-          <p>Лёгкая повседневная одежда для города.</p>
+          <h2>Образ 2: Платье</h2>
+          <p>Повседневный женственный образ.</p>
           <button class="card-btn" type="button">Примерить этот образ</button>
         </article>
 
-        <article class="card" data-outfit="look3">
-          <div class="card-thumb card-thumb-3"></div>
-          <h2>Образ 3: Вечерний</h2>
-          <p>Вечерний наряд для особых случаев.</p>
-          <button class="card-btn" type="button">Примерить этот образ</button>
-        </article>
       </div>
     </section>
 
-    <!-- ШАГ 2: AR-ЭКРАН -->
+    <!-- ============================= -->
+    <!-- AR СЦЕНА -->
+    <!-- ============================= -->
     <section id="ar-section" class="ar-section" hidden>
-  <div class="ar-top-bar">
-    <button id="backToCatalog" type="button">← Вернуться к выбору образа</button>
-    <div class="ar-status" id="arStatus">Наведите камеру на маркер</div>
-  </div>
+      <div class="ar-top-bar">
+        <button id="backToCatalog" type="button">← Назад к каталогу</button>
+        <div class="ar-status" id="arStatus">Наведите камеру на маркер</div>
+      </div>
 
-  <div id="ar-container" class="ar-container">
-    <div id="hint" class="hint-overlay">Наведите камеру на маркер</div>
-  </div>
-
-  <div class="ar-outfits">
-    <span>Сменить образ:</span>
-    <button type="button" class="ar-outfit-btn" data-outfit="look1">Образ 1</button>
-    <button type="button" class="ar-outfit-btn" data-outfit="look2">Образ 2</button>
-    <button type="button" class="ar-outfit-btn" data-outfit="look3">Образ 3</button>
-  </div>
-</section>
-
-        <!-- сюда MindAR вставит видео и WebGL -->
+      <div id="ar-container" class="ar-container">
         <div id="hint" class="hint-overlay">Наведите камеру на маркер</div>
       </div>
 
@@ -85,5 +69,9 @@
         <span>Сменить образ:</span>
         <button type="button" class="ar-outfit-btn" data-outfit="look1">Образ 1</button>
         <button type="button" class="ar-outfit-btn" data-outfit="look2">Образ 2</button>
-        <button type="button" class="ar-outfit-btn" data-outfit="look3">Образ 3</button>
-      </
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>

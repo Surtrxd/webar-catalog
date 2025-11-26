@@ -1,7 +1,9 @@
-import * as THREE from "three"
+// правильный импорт three.js
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/loaders/GLTFLoader.js";
 
-const { MindARThree } = window.MINDAR.IMAGE; // вот тут берем MindARThree
+// Берём MindARThree из глобального объекта
+const { MindARThree } = window.MINDAR.IMAGE;
 
 document.addEventListener("DOMContentLoaded", () => {
   const catalogSection = document.getElementById("catalog-section");
@@ -10,9 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const arStatus = document.getElementById("arStatus");
   const hintEl = document.getElementById("hint");
 
+  // одежда, которую можно выбирать
   const outfits = {
-    look1: { name: "Образ 1: Жакет", file: "/static/models/cyberpunk_2077_-_vs_jacket.glb" },
-    look2: { name: "Образ 2: Повседневный", file: "/static/models/woman_dress.glb" },
+    look1: {
+      name: "Образ 1: Жакет",
+      file: "/static/models/cyberpunk_2077_-_vs_jacket.glb",
+    },
+    look2: {
+      name: "Образ 2: Платье",
+      file: "/static/models/woman_dress.glb",
+    },
   };
 
   let currentOutfitId = null;
@@ -26,12 +35,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let mannequin = null;
   let currentClothes = null;
 
+  // ИНИЦИАЛИЗАЦИЯ AR
   const initMindAR = async () => {
     if (mindarThree) return;
 
+    console.log("Инициализация MindAR...");
+
     mindarThree = new MindARThree({
       container: document.querySelector("#ar-container"),
-      imageTargetSrc: "/static/catalog/catalog-marker.mind",
+      imageTargetSrc: "/static/catalog/catalog-marker.mind", // <-- путь к твоему .mind файлу
     });
 
     const three = mindarThree;
@@ -39,21 +51,24 @@ document.addEventListener("DOMContentLoaded", () => {
     scene = three.scene;
     camera = three.camera;
 
-    renderer.setClearColor(0x000000, 0);
-
     anchor = three.addAnchor(0);
+
+    renderer.setClearColor(0x000000, 0);
 
     const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.3);
     scene.add(light);
 
-    // когда MindAR увидел маркер — прячем подсказку
+    // события маркера
     anchor.onTargetFound = () => {
-      if (hintEl) hintEl.style.display = "none";
-      if (arStatus) arStatus.textContent = "Маркер найден";
+      console.log("Маркер найден");
+      hintEl.style.display = "none";
+      arStatus.textContent = "Маркер найден";
     };
+
     anchor.onTargetLost = () => {
-      if (hintEl) hintEl.style.display = "block";
-      if (arStatus) arStatus.textContent = "Наведите камеру на маркер";
+      console.log("Маркер потерян");
+      hintEl.style.display = "block";
+      arStatus.textContent = "Наведите камеру на маркер";
     };
 
     await loadMannequin();
@@ -63,12 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  // ЗАГРУЗКА МАНЕКЕНА
   const loadMannequin = () =>
     new Promise((resolve, reject) => {
-      if (mannequin) {
-        resolve();
-        return;
-      }
+      if (mannequin) return resolve();
+
+      console.log("Загрузка манекена...");
+
       loader.load(
         "/static/models/mannequin.glb",
         (gltf) => {
@@ -76,30 +92,28 @@ document.addEventListener("DOMContentLoaded", () => {
           mannequin.scale.set(0.5, 0.5, 0.5);
           mannequin.position.set(0, -0.2, 0);
           anchor.group.add(mannequin);
+
+          console.log("Манекен загружен");
           resolve();
         },
         undefined,
-        (err) => reject(err)
+        (err) => {
+          console.error("Ошибка загрузки манекена:", err);
+          reject(err);
+        }
       );
     });
 
+  // ЗАГРУЗКА ОДЕЖДЫ
   const loadClothes = (outfitId) =>
     new Promise((resolve, reject) => {
       const outfit = outfits[outfitId];
-      if (!outfit || !mannequin) {
-        resolve();
-        return;
-      }
+      if (!outfit) return resolve();
+
+      console.log("Загрузка одежды:", outfitId);
 
       if (currentClothes) {
         mannequin.remove(currentClothes);
-        currentClothes.traverse((node) => {
-          if (node.geometry) node.geometry.dispose();
-          if (node.material) {
-            if (Array.isArray(node.material)) node.material.forEach((m) => m.dispose());
-            else node.material.dispose();
-          }
-        });
         currentClothes = null;
       }
 
@@ -110,65 +124,74 @@ document.addEventListener("DOMContentLoaded", () => {
           clothes.position.set(0, 0, 0);
           mannequin.add(clothes);
           currentClothes = clothes;
-          if (arStatus) arStatus.textContent = outfit.name;
+
+          arStatus.textContent = outfit.name;
+          console.log("Одежда загружена:", outfit.name);
+
           resolve();
         },
         undefined,
-        (err) => reject(err)
+        (err) => {
+          console.error("Ошибка загрузки одежды:", err);
+          reject(err);
+        }
       );
     });
 
+  // СТАРТ КАМЕРЫ
   const startAR = async () => {
     await initMindAR();
+
     if (!started) {
-      // ВАЖНО: этот вызов должен быть после клика пользователя (у нас так и есть)
-      await mindarThree.start();
+      console.log("Запуск камеры через mindarThree.start()");
+      await mindarThree.start(); // тут браузер должен спросить доступ к камере
       started = true;
     }
-    if (hintEl) hintEl.style.display = "block";
-    if (arStatus) arStatus.textContent = "Наведите камеру на маркер";
+
+    hintEl.style.display = "block";
+    arStatus.textContent = "Наведите камеру на маркер";
   };
 
+  // ПЕРЕХОД К AR
   const openARWithOutfit = async (outfitId) => {
     currentOutfitId = outfitId;
+
     catalogSection.hidden = true;
     arSection.hidden = false;
 
     await startAR();
-    if (currentOutfitId) {
-      await loadClothes(currentOutfitId);
-    }
+    await loadClothes(outfitId);
   };
 
+  // ВОЗВРАТ К КАТАЛОГУ
   const backToCatalog = () => {
     catalogSection.hidden = false;
     arSection.hidden = true;
-    // Можно не останавливать mindarThree, чтобы быстрее переходить туда-сюда
   };
 
-  // КАТАЛОГ: клики по карточкам
+  backBtn.addEventListener("click", backToCatalog);
+
+  // КЛИКИ ПО КАРТОЧКАМ
   document.querySelectorAll(".card").forEach((card) => {
     const outfitId = card.dataset.outfit;
     const btn = card.querySelector(".card-btn");
+
     const handler = () => openARWithOutfit(outfitId);
 
     card.addEventListener("click", handler);
-    if (btn) {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        handler();
-      });
-    }
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      handler();
+    });
   });
 
-  // Кнопки внутри AR для смены одежды
+  // СМЕНА ОБРАЗОВ В AR
   document.querySelectorAll(".ar-outfit-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const outfitId = btn.dataset.outfit;
-      currentOutfitId = outfitId;
       await loadClothes(outfitId);
     });
   });
 
-  backBtn.addEventListener("click", backToCatalog);
+  console.log("catalog.js загружен");
 });
