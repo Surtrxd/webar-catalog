@@ -5,10 +5,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WebAR Каталог одежды</title>
 
+  <!-- твои стили -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
-  <!-- three.js + GLTFLoader как ES-модули -->
+  <!-- СТИЛИ MindAR (чтобы видео и канвас нормально растягивались) -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.css" />
+
+  <!-- SKRIPT MindAR (НЕ МОДУЛЬ, глобальный объект window.MINDAR) -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
+
+  <!-- наш основной код как ES-модуль -->
   <script type="module" defer src="{{ url_for('static', filename='ar/catalog.js') }}"></script>
+
 </head>
 <body>
   <header class="site-header">
@@ -51,12 +60,23 @@
 
     <!-- ШАГ 2: AR-ЭКРАН -->
     <section id="ar-section" class="ar-section" hidden>
-      <div class="ar-top-bar">
-        <button id="backToCatalog" type="button">← Вернуться к выбору образа</button>
-        <div class="ar-status" id="arStatus">Наведите камеру на маркер</div>
-      </div>
+  <div class="ar-top-bar">
+    <button id="backToCatalog" type="button">← Вернуться к выбору образа</button>
+    <div class="ar-status" id="arStatus">Наведите камеру на маркер</div>
+  </div>
 
-      <div id="ar-container" class="ar-container">
+  <div id="ar-container" class="ar-container">
+    <div id="hint" class="hint-overlay">Наведите камеру на маркер</div>
+  </div>
+
+  <div class="ar-outfits">
+    <span>Сменить образ:</span>
+    <button type="button" class="ar-outfit-btn" data-outfit="look1">Образ 1</button>
+    <button type="button" class="ar-outfit-btn" data-outfit="look2">Образ 2</button>
+    <button type="button" class="ar-outfit-btn" data-outfit="look3">Образ 3</button>
+  </div>
+</section>
+
         <!-- сюда MindAR вставит видео и WebGL -->
         <div id="hint" class="hint-overlay">Наведите камеру на маркер</div>
       </div>
