@@ -5,87 +5,65 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WebAR Каталог одежды</title>
 
-  <!-- Стили -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 
-  <!-- three.js (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/examples/js/controls/OrbitControls.js"></script>
-
-  <!-- model-viewer (fallback AR / 3D preview) -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
-  <!-- Если захочешь 8th Wall — раскомментируешь и вставишь ключ -->
-  <!-- <script src="https://apps.8thwall.com/xrweb?appKey=ТВОЙ_APP_KEY"></script> -->
+  <!-- three.js + GLTFLoader как ES-модули -->
+  <script type="module" defer src="{{ url_for('static', filename='ar/catalog.js') }}"></script>
 </head>
 <body>
-  <header>
-    <h1>WebAR — Каталог одежды</h1>
+  <header class="site-header">
+    <div class="logo">WebAR Каталог</div>
+    <div class="subtitle">Примерка одежды на виртуальном манекене</div>
   </header>
 
-  <main>
-    <section class="viewer-row">
-      <div id="canvas-wrap">
-        <!-- three.js canvas -->
-        <canvas id="three-canvas"></canvas>
+  <main class="site-main">
+
+    <!-- ШАГ 1: КАТАЛОГ -->
+    <section id="catalog-section" class="catalog-section">
+      <h1>Выберите образ для примерки</h1>
+      <p class="catalog-hint">
+        Сначала выберите одежду, затем она появится на манекене в AR-режиме.
+      </p>
+
+      <div class="catalog-grid">
+        <article class="card" data-outfit="look1">
+          <div class="card-thumb card-thumb-1"></div>
+          <h2>Образ 1: Классический жакет</h2>
+          <p>Базовый образ с пиджаком. Подходит для делового стиля.</p>
+          <button class="card-btn" type="button">Примерить этот образ</button>
+        </article>
+
+        <article class="card" data-outfit="look2">
+          <div class="card-thumb card-thumb-2"></div>
+          <h2>Образ 2: Повседневный</h2>
+          <p>Лёгкая повседневная одежда для города.</p>
+          <button class="card-btn" type="button">Примерить этот образ</button>
+        </article>
+
+        <article class="card" data-outfit="look3">
+          <div class="card-thumb card-thumb-3"></div>
+          <h2>Образ 3: Вечерний</h2>
+          <p>Вечерний наряд для особых случаев.</p>
+          <button class="card-btn" type="button">Примерить этот образ</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- ШАГ 2: AR-ЭКРАН -->
+    <section id="ar-section" class="ar-section" hidden>
+      <div class="ar-top-bar">
+        <button id="backToCatalog" type="button">← Вернуться к выбору образа</button>
+        <div class="ar-status" id="arStatus">Наведите камеру на маркер</div>
       </div>
 
-      <aside class="controls">
-        <h3>Выбор модели</h3>
-        <p id="status">Статус: ожидание загрузки</p>
+      <div id="ar-container" class="ar-container">
+        <!-- сюда MindAR вставит видео и WebGL -->
+        <div id="hint" class="hint-overlay">Наведите камеру на маркер</div>
+      </div>
 
-        <label for="modelUrl">URL .glb:</label>
-        <input
-          id="modelUrl"
-          type="text"
-          placeholder="static/assets/mannequin.glb"
-          value="static/assets/mannequin.glb"
-        >
-
-        <div class="buttons">
-          <button id="loadBtn">Загрузить модель</button>
-          <button id="arBtn">Открыть AR / Примерить</button>
-        </div>
-
-        <hr>
-
-        <div class="preset-buttons">
-          <p>Быстрый выбор:</p>
-          <button data-model="static/assets/mannequin.glb">Манекен</button>
-          <button data-model="static/assets/jacket.glb">Жакет</button>
-          <button data-model="static/assets/dress.glb">Платье</button>
-        </div>
-
-        <hr>
-
-        <div id="fallback" style="display:none">
-          <p>Fallback: интерактивный 3D-превью</p>
-          <model-viewer
-            id="mv"
-            src=""
-            alt="3D модель"
-            shadow-intensity="1"
-            camera-controls
-            ar
-            autoplay
-            style="width:100%;height:300px"
-          ></model-viewer>
-        </div>
-      </aside>
-    </section>
-
-    <section class="notes">
-      <h4>Как пользоваться</h4>
-      <ol>
-        <li>Положи `.glb` модели в <b>static/assets/</b> (манекен и одежда).</li>
-        <li>Нажми на одну из кнопок «Манекен / Жакет / Платье» или укажи путь вручную.</li>
-        <li>Нажми «Загрузить модель» — модель появится в 3D-сцене.</li>
-        <li>Нажми «Открыть AR» — позже сюда можно подвязать 8th Wall, сейчас работает fallback через model-viewer.</li>
-      </ol>
-    </section>
-  </main>
-
-  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
-</body>
-</html>
+      <div class="ar-outfits">
+        <span>Сменить образ:</span>
+        <button type="button" class="ar-outfit-btn" data-outfit="look1">Образ 1</button>
+        <button type="button" class="ar-outfit-btn" data-outfit="look2">Образ 2</button>
+        <button type="button" class="ar-outfit-btn" data-outfit="look3">Образ 3</button>
+      </
